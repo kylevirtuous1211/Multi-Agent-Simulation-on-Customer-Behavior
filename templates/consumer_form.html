@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if edit %}編輯消費者{% else %}添加消費者{% endif %} - 消費者行為模擬系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">消費者行為模擬系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/consumers">消費者資料</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classification">分類系統</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/agents">AI代理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product_test">產品測試</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crm">CRM整合</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title">{% if edit %}編輯消費者{% else %}添加消費者{% endif %}</h2>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% if edit %}{{ url_for('edit_consumer', consumer_id=consumer.id) }}{% else %}{{ url_for('add_consumer') }}{% endif %}">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3>人口統計資料</h3>
+                            <div class="mb-3">
+                                <label for="age" class="form-label">年齡</label>
+                                <input type="number" class="form-control" id="age" name="age" min="0" max="120" value="{{ consumer.demographic.age if edit else '' }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">性別</label>
+                                <select class="form-select" id="gender" name="gender" required>
+                                    <option value="">請選擇</option>
+                                    <option value="male" {% if edit and consumer.demographic.gender == 'male' %}selected{% endif %}>男</option>
+                                    <option value="female" {% if edit and consumer.demographic.gender == 'female' %}selected{% endif %}>女</option>
+                                    <option value="other" {% if edit and consumer.demographic.gender == 'other' %}selected{% endif %}>其他</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="income" class="form-label">月收入</label>
+                                <input type="number" class="form-control" id="income" name="income" min="0" value="{{ consumer.demographic.income if edit else '' }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="education" class="form-label">教育程度</label>
+                                <select class="form-select" id="education" name="education" required>
+                                    <option value="">請選擇</option>
+                                    <option value="high_school" {% if edit and consumer.demographic.education == 'high_school' %}selected{% endif %}>高中</option>
+                                    <option value="bachelor" {% if edit and consumer.demographic.education == 'bachelor' %}selected{% endif %}>學士</option>
+                                    <option value="master" {% if edit and consumer.demographic.education == 'master' %}selected{% endif %}>碩士</option>
+                                    <option value="phd" {% if edit and consumer.demographic.education == 'phd' %}selected{% endif %}>博士</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="occupation" class="form-label">職業</label>
+                                <input type="text" class="form-control" id="occupation" name="occupation" value="{{ consumer.demographic.occupation if edit else '' }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">居住地</label>
+                                <input type="text" class="form-control" id="location" name="location" value="{{ consumer.demographic.location if edit else '' }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>行為資料</h3>
+                            <div class="mb-3">
+                                <label for="purchase_frequency" class="form-label">購買頻率 (1-10)</label>
+                                <input type="range" class="form-range" id="purchase_frequency" name="purchase_frequency" min="1" max="10" value="{{ consumer.behavioral.purchase_frequency if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.behavioral.purchase_frequency if edit else '5' }}</output>
+                            </div>
+                            <div class="mb-3">
+                                <label for="brand_loyalty" class="form-label">品牌忠誠度 (1-10)</label>
+                                <input type="range" class="form-range" id="brand_loyalty" name="brand_loyalty" min="1" max="10" value="{{ consumer.behavioral.brand_loyalty if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.behavioral.brand_loyalty if edit else '5' }}</output>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price_consciousness" class="form-label">價格敏感度 (1-10)</label>
+                                <input type="range" class="form-range" id="price_consciousness" name="price_consciousness" min="1" max="10" value="{{ consumer.behavioral.price_consciousness if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.behavioral.price_consciousness if edit else '5' }}</output>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tech_savviness" class="form-label">科技熟悉度 (1-10)</label>
+                                <input type="range" class="form-range" id="tech_savviness" name="tech_savviness" min="1" max="10" value="{{ consumer.behavioral.tech_savviness if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.behavioral.tech_savviness if edit else '5' }}</output>
+                            </div>
+                            <div class="mb-3">
+                                <label for="social_media_usage" class="form-label">社交媒體使用頻率 (1-10)</label>
+                                <input type="range" class="form-range" id="social_media_usage" name="social_media_usage" min="1" max="10" value="{{ consumer.behavioral.social_media_usage if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.behavioral.social_media_usage if edit else '5' }}</output>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h3>心理統計資料</h3>
+                            <div class="mb-3">
+                                <label for="personality" class="form-label">性格</label>
+                                <select class="form-select" id="personality" name="personality" required>
+                                    <option value="">請選擇</option>
+                                    <option value="introvert" {% if edit and consumer.psychographic.personality == 'introvert' %}selected{% endif %}>內向</option>
+                                    <option value="extrovert" {% if edit and consumer.psychographic.personality == 'extrovert' %}selected{% endif %}>外向</option>
+                                    <option value="ambivert" {% if edit and consumer.psychographic.personality == 'ambivert' %}selected{% endif %}>中間型</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="interests" class="form-label">興趣愛好</label>
+                                <input type="text" class="form-control" id="interests" name="interests" value="{{ consumer.psychographic.interests if edit else '' }}" required>
+                                <div class="form-text">多個興趣請用逗號分隔</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="values" class="form-label">價值觀</label>
+                                <input type="text" class="form-control" id="values" name="values" value="{{ consumer.psychographic.values if edit else '' }}" required>
+                                <div class="form-text">多個價值觀請用逗號分隔</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lifestyle" class="form-label">生活方式</label>
+                                <input type="text" class="form-control" id="lifestyle" name="lifestyle" value="{{ consumer.psychographic.lifestyle if edit else '' }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="innovativeness" class="form-label">創新接受度 (1-10)</label>
+                                <input type="range" class="form-range" id="innovativeness" name="innovativeness" min="1" max="10" value="{{ consumer.psychographic.innovativeness if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.psychographic.innovativeness if edit else '5' }}</output>
+                            </div>
+                            <div class="mb-3">
+                                <label for="social_influence" class="form-label">社交影響力 (1-10)</label>
+                                <input type="range" class="form-range" id="social_influence" name="social_influence" min="1" max="10" value="{{ consumer.psychographic.social_influence if edit else '5' }}" oninput="this.nextElementSibling.value = this.value">
+                                <output>{{ consumer.psychographic.social_influence if edit else '5' }}</output>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">{% if edit %}更新{% else %}添加{% endif %}</button>
+                        <a href="{{ url_for('consumers') }}" class="btn btn-secondary">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white mt-5 py-3">
+        <div class="container text-center">
+            <p>&copy; 2025 消費者行為模擬系統 | 基於生成式代理架構</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

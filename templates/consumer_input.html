@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消費者資料輸入 - 消費者行為模擬系統</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">消費者行為模擬系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/consumer_input">消費者資料</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classification">分類系統</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/agent_training">AI代理訓練</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product_testing">產品測試</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crm_integration">CRM整合</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/system_test">系統測試</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">消費者資料管理</h1>
+        
+        <div id="alertContainer"></div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">新增消費者資料</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="consumerForm">
+                            <ul class="nav nav-tabs mb-3" id="formTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="demographic-tab" data-bs-toggle="tab" data-bs-target="#demographic" type="button" role="tab" aria-controls="demographic" aria-selected="true">人口統計</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="behavioral-tab" data-bs-toggle="tab" data-bs-target="#behavioral" type="button" role="tab" aria-controls="behavioral" aria-selected="false">行為資料</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="psychographic-tab" data-bs-toggle="tab" data-bs-target="#psychographic" type="button" role="tab" aria-controls="psychographic" aria-selected="false">心理統計</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="formTabsContent">
+                                <div class="tab-pane fade show active" id="demographic" role="tabpanel" aria-labelledby="demographic-tab">
+                                    <div class="mb-3">
+                                        <label for="age" class="form-label">年齡</label>
+                                        <input type="number" class="form-control" id="age" name="demographic.age" min="0" max="120">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="gender" class="form-label">性別</label>
+                                        <select class="form-select" id="gender" name="demographic.gender">
+                                            <option value="">請選擇</option>
+                                            <option value="male">男</option>
+                                            <option value="female">女</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="income" class="form-label">年收入 (萬元)</label>
+                                        <input type="number" class="form-control" id="income" name="demographic.income" min="0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="education" class="form-label">教育程度</label>
+                                        <select class="form-select" id="education" name="demographic.education">
+                                            <option value="">請選擇</option>
+                                            <option value="high_school">高中</option>
+                                            <option value="bachelor">學士</option>
+                                            <option value="master">碩士</option>
+                                            <option value="phd">博士</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="occupation" class="form-label">職業</label>
+                                        <input type="text" class="form-control" id="occupation" name="demographic.occupation">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">居住地區</label>
+                                        <input type="text" class="form-control" id="location" name="demographic.location">
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="behavioral" role="tabpanel" aria-labelledby="behavioral-tab">
+                                    <div class="mb-3">
+                                        <label for="purchaseFrequency" class="form-label">購買頻率 (每月)</label>
+                                        <input type="number" class="form-control" id="purchaseFrequency" name="behavioral.purchase_frequency" min="0" step="0.1">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="brandLoyalty" class="form-label">品牌忠誠度 (1-10)</label>
+                                        <input type="number" class="form-control" id="brandLoyalty" name="behavioral.brand_loyalty" min="1" max="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="priceConsciousness" class="form-label">價格敏感度 (1-10)</label>
+                                        <input type="number" class="form-control" id="priceConsciousness" name="behavioral.price_consciousness" min="1" max="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="techSavviness" class="form-label">科技熟悉度 (1-10)</label>
+                                        <input type="number" class="form-control" id="techSavviness" name="behavioral.tech_savviness" min="1" max="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="socialMediaUsage" class="form-label">社交媒體使用頻率 (1-10)</label>
+                                        <input type="number" class="form-control" id="socialMediaUsage" name="behavioral.social_media_usage" min="1" max="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="preferredChannel" class="form-label">偏好購物渠道</label>
+                                        <select class="form-select" id="preferredChannel" name="behavioral.preferred_channel">
+                                            <option value="">請選擇</option>
+                                            <option value="online">線上</option>
+                                            <option value="offline">實體店面</option>
+                                            <option value="both">兩者皆有</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="psychographic" role="tabpanel" aria-labelledby="psychographic-tab">
+                                    <div class="mb-3">
+                                        <label for="personality" class="form-label">性格類型</label>
+                                        <select class="form-select" id="personality" name="psychographic.personality">
+                                            <option value="">請選擇</option>
+                                            <option value="introvert">內向</option>
+                                            <option value="extrovert">外向</option>
+                                            <option value="ambivert">兩者皆有</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="values" class="form-label">價值觀</label>
+                                        <input type="text" class="form-control" id="values" name="psychographic.values">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="interests" class="form-label">興趣愛好</label>
+                                        <input type="text" class="form-control" id="interests" name="psychographic.interests">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="lifestyles" class="form-label">生活方式</label>
+                                        <input type="text" class="form-control" id="lifestyles" name="psychographic.lifestyles">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="innovativeness" class="form-label">創新接受度 (1-10)</label>
+                                        <input type="number" class="form-control" id="innovativeness" name="psychographic.innovativeness" min="1" max="10">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="socialInfluence" class="form-label">社交影響力 (1-10)</label>
+                                        <input type="number" class="form-control" id="socialInfluence" name="psychographic.social_influence" min="1" max="10">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">批量導入</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>支持CSV或JSON格式的批量導入。</p>
+                        <input type="file" id="importFile" accept=".csv,.json" style="display: none;">
+                        <div class="d-grid gap-2">
+                            <button id="importButton" class="btn btn-outline-primary">選擇文件</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">消費者列表</h5>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" id="searchInput" class="form-control" placeholder="搜索...">
+                            <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                <i class="bi bi-search"></i> 搜索
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>年齡</th>
+                                        <th>性別</th>
+                                        <th>職業</th>
+                                        <th>購買頻率</th>
+                                        <th>品牌忠誠度</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="consumerTableBody">
+                                    <!-- 消費者資料將在這裡動態加載 -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="paginationContainer" class="d-flex justify-content-center mt-3">
+                            <!-- 分頁控件將在這裡動態加載 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 消費者詳情模態框 -->
+    <div class="modal fade" id="consumerDetailModal" tabindex="-1" aria-labelledby="consumerDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="consumerDetailModalLabel">消費者詳情</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="consumerDetailContent">
+                    <!-- 消費者詳情將在這裡動態加載 -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="editConsumerButton">編輯</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編輯消費者模態框 -->
+    <div class="modal fade" id="editConsumerModal" tabindex="-1" aria-labelledby="editConsumerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editConsumerModalLabel">編輯消費者</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editConsumerForm">
+                        <input type="hidden" id="editConsumerId">
+                        <!-- 編輯表單將在這裡動態加載 -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="deleteConsumerButton">刪除</button>
+                    <button type="button" class="btn btn-primary" id="saveConsumerButton">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-4 mt-5">
+        <div class="container text-center">
+            <p>消費者行為模擬系統 &copy; 2025</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // 消費者資料頁面特定的JavaScript
+        
+        // 載入消費者列表
+        async function loadConsumerList() {
+            try {
+                const resultContainer = document.getElementById('consumerTableBody');
+                createSpinner(resultContainer);
+                
+                const result = await apiRequest('/api/consumers');
+                
+                if (result.success && result.data) {
+                    displayConsumerList(result.data);
+                } else {
+                    throw new Error('獲取消費者資料失敗');
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 顯示消費者列表
+        function displayConsumerList(consumers) {
+            const tableBody = document.getElementById('consumerTableBody');
+            tableBody.innerHTML = '';
+            
+            if (consumers.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" class="text-center">沒有消費者資料</td></tr>';
+                return;
+            }
+            
+            consumers.forEach(consumer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${consumer.id}</td>
+                    <td>${consumer.demographic.age || '-'}</td>
+                    <td>${translateGender(consumer.demographic.gender) || '-'}</td>
+                    <td>${consumer.demographic.occupation || '-'}</td>
+                    <td>${consumer.behavioral.purchase_frequency || '-'}</td>
+                    <td>${consumer.behavioral.brand_loyalty || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary view-consumer" data-id="${consumer.id}">查看</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // 綁定查看按鈕事件
+            document.querySelectorAll('.view-consumer').forEach(button => {
+                button.addEventListener('click', function() {
+                    const consumerId = this.getAttribute('data-id');
+                    viewConsumerDetail(consumerId);
+                });
+            });
+        }
+        
+        // 翻譯性別
+        function translateGender(gender) {
+            switch(gender) {
+                case 'male': return '男';
+                case 'female': return '女';
+                case 'other': return '其他';
+                default: return gender;
+            }
+        }
+        
+        // 查看消費者詳情
+        async function viewConsumerDetail(consumerId) {
+            try {
+                const result = await apiRequest(`/api/consumers/${consumerId}`);
+                
+                if (result.success && result.data) {
+                    displayConsumerDetail(result.data);
+                    
+                    // 顯示模態框
+                    const modal = new bootstrap.Modal(document.getElementById('consumerDetailModal'));
+                    modal.show();
+                    
+                    // 綁定編輯按鈕事件
+                    document.getElementById('editConsumerButton').onclick = function() {
+                        prepareEditConsumer(result.data);
+                    };
+                } else {
+                    throw new Error('獲取消費者詳情失敗');
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 顯示消費者詳情
+        function displayConsumerDetail(consumer) {
+            const detailContent = document.getElementById('consumerDetailContent');
+            
+            detailContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>人口統計資料</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>年齡</span>
+                                <span>${consumer.demographic.age || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>性別</span>
+                                <span>${translateGender(consumer.demographic.gender) || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>年收入</span>
+                                <span>${consumer.demographic.income ? consumer.demographic.income + '萬元' : '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>教育程度</span>
+                                <span>${translateEducation(consumer.demographic.education) || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>職業</span>
+                                <span>${consumer.demographic.occupation || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>居住地區</span>
+                                <span>${consumer.demographic.location || '-'}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>行為資料</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>購買頻率</span>
+                                <span>${consumer.behavioral.purchase_frequency || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>品牌忠誠度</span>
+                                <span>${consumer.behavioral.brand_loyalty || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>價格敏感度</span>
+                                <span>${consumer.behavioral.price_consciousness || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>科技熟悉度</span>
+                                <span>${consumer.behavioral.tech_savviness || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>社交媒體使用頻率</span>
+                                <span>${consumer.behavioral.social_media_usage || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>偏好購物渠道</span>
+                                <span>${translateChannel(consumer.behavioral.preferred_channel) || '-'}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>心理統計資料</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>性格類型</span>
+                                <span>${translatePersonality(consumer.psychographic.personality) || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>價值觀</span>
+                                <span>${consumer.psychographic.values || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>興趣愛好</span>
+                                <span>${consumer.psychographic.interests || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>生活方式</span>
+                                <span>${consumer.psychographic.lifestyles || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>創新接受度</span>
+                                <span>${consumer.psychographic.innovativeness || '-'}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>社交影響力</span>
+                                <span>${consumer.psychographic.social_influence || '-'}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 翻譯教育程度
+        function translateEducation(education) {
+            switch(education) {
+                case 'high_school': return '高中';
+                case 'bachelor': return '學士';
+                case 'master': return '碩士';
+                case 'phd': return '博士';
+                case 'other': return '其他';
+                default: return education;
+            }
+        }
+        
+        // 翻譯購物渠道
+        function translateChannel(channel) {
+            switch(channel) {
+                case 'online': return '線上';
+                case 'offline': return '實體店面';
+                case 'both': return '兩者皆有';
+                default: return channel;
+            }
+        }
+        
+        // 翻譯性格類型
+        function translatePersonality(personality) {
+            switch(personality) {
+                case 'introvert': return '內向';
+                case 'extrovert': return '外向';
+                case 'ambivert': return '兩者皆有';
+                default: return personality;
+            }
+        }
+        
+        // 準備編輯消費者
+        function prepareEditConsumer(consumer) {
+            // 隱藏詳情模態框
+            bootstrap.Modal.getInstance(document.getElementById('consumerDetailModal')).hide();
+            
+            // 設置編輯表單
+            document.getElementById('editConsumerId').value = consumer.id;
+            
+            const editForm = document.getElementById('editConsumerForm');
+            editForm.innerHTML = `
+                <ul class="nav nav-tabs mb-3" id="editFormTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="edit-demographic-tab" data-bs-toggle="tab" data-bs-target="#edit-demographic" type="button" role="tab" aria-controls="edit-demographic" aria-selected="true">人口統計</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="edit-behavioral-tab" data-bs-toggle="tab" data-bs-target="#edit-behavioral" type="button" role="tab" aria-controls="edit-behavioral" aria-selected="false">行為資料</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="edit-psychographic-tab" data-bs-toggle="tab" data-bs-target="#edit-psychographic" type="button" role="tab" aria-controls="edit-psychographic" aria-selected="false">心理統計</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="editFormTabsContent">
+                    <div class="tab-pane fade show active" id="edit-demographic" role="tabpanel" aria-labelledby="edit-demographic-tab">
+                        <div class="mb-3">
+                            <label for="edit-age" class="form-label">年齡</label>
+                            <input type="number" class="form-control" id="edit-age" name="demographic.age" min="0" max="120" value="${consumer.demographic.age || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-gender" class="form-label">性別</label>
+                            <select class="form-select" id="edit-gender" name="demographic.gender">
+                                <option value="">請選擇</option>
+                                <option value="male" ${consumer.demographic.gender === 'male' ? 'selected' : ''}>男</option>
+                                <option value="female" ${consumer.demographic.gender === 'female' ? 'selected' : ''}>女</option>
+                                <option value="other" ${consumer.demographic.gender === 'other' ? 'selected' : ''}>其他</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-income" class="form-label">年收入 (萬元)</label>
+                            <input type="number" class="form-control" id="edit-income" name="demographic.income" min="0" value="${consumer.demographic.income || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-education" class="form-label">教育程度</label>
+                            <select class="form-select" id="edit-education" name="demographic.education">
+                                <option value="">請選擇</option>
+                                <option value="high_school" ${consumer.demographic.education === 'high_school' ? 'selected' : ''}>高中</option>
+                                <option value="bachelor" ${consumer.demographic.education === 'bachelor' ? 'selected' : ''}>學士</option>
+                                <option value="master" ${consumer.demographic.education === 'master' ? 'selected' : ''}>碩士</option>
+                                <option value="phd" ${consumer.demographic.education === 'phd' ? 'selected' : ''}>博士</option>
+                                <option value="other" ${consumer.demographic.education === 'other' ? 'selected' : ''}>其他</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-occupation" class="form-label">職業</label>
+                            <input type="text" class="form-control" id="edit-occupation" name="demographic.occupation" value="${consumer.demographic.occupation || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-location" class="form-label">居住地區</label>
+                            <input type="text" class="form-control" id="edit-location" name="demographic.location" value="${consumer.demographic.location || ''}">
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="edit-behavioral" role="tabpanel" aria-labelledby="edit-behavioral-tab">
+                        <div class="mb-3">
+                            <label for="edit-purchaseFrequency" class="form-label">購買頻率 (每月)</label>
+                            <input type="number" class="form-control" id="edit-purchaseFrequency" name="behavioral.purchase_frequency" min="0" step="0.1" value="${consumer.behavioral.purchase_frequency || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-brandLoyalty" class="form-label">品牌忠誠度 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-brandLoyalty" name="behavioral.brand_loyalty" min="1" max="10" value="${consumer.behavioral.brand_loyalty || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-priceConsciousness" class="form-label">價格敏感度 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-priceConsciousness" name="behavioral.price_consciousness" min="1" max="10" value="${consumer.behavioral.price_consciousness || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-techSavviness" class="form-label">科技熟悉度 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-techSavviness" name="behavioral.tech_savviness" min="1" max="10" value="${consumer.behavioral.tech_savviness || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-socialMediaUsage" class="form-label">社交媒體使用頻率 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-socialMediaUsage" name="behavioral.social_media_usage" min="1" max="10" value="${consumer.behavioral.social_media_usage || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-preferredChannel" class="form-label">偏好購物渠道</label>
+                            <select class="form-select" id="edit-preferredChannel" name="behavioral.preferred_channel">
+                                <option value="">請選擇</option>
+                                <option value="online" ${consumer.behavioral.preferred_channel === 'online' ? 'selected' : ''}>線上</option>
+                                <option value="offline" ${consumer.behavioral.preferred_channel === 'offline' ? 'selected' : ''}>實體店面</option>
+                                <option value="both" ${consumer.behavioral.preferred_channel === 'both' ? 'selected' : ''}>兩者皆有</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="edit-psychographic" role="tabpanel" aria-labelledby="edit-psychographic-tab">
+                        <div class="mb-3">
+                            <label for="edit-personality" class="form-label">性格類型</label>
+                            <select class="form-select" id="edit-personality" name="psychographic.personality">
+                                <option value="">請選擇</option>
+                                <option value="introvert" ${consumer.psychographic.personality === 'introvert' ? 'selected' : ''}>內向</option>
+                                <option value="extrovert" ${consumer.psychographic.personality === 'extrovert' ? 'selected' : ''}>外向</option>
+                                <option value="ambivert" ${consumer.psychographic.personality === 'ambivert' ? 'selected' : ''}>兩者皆有</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-values" class="form-label">價值觀</label>
+                            <input type="text" class="form-control" id="edit-values" name="psychographic.values" value="${consumer.psychographic.values || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-interests" class="form-label">興趣愛好</label>
+                            <input type="text" class="form-control" id="edit-interests" name="psychographic.interests" value="${consumer.psychographic.interests || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-lifestyles" class="form-label">生活方式</label>
+                            <input type="text" class="form-control" id="edit-lifestyles" name="psychographic.lifestyles" value="${consumer.psychographic.lifestyles || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-innovativeness" class="form-label">創新接受度 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-innovativeness" name="psychographic.innovativeness" min="1" max="10" value="${consumer.psychographic.innovativeness || ''}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit-socialInfluence" class="form-label">社交影響力 (1-10)</label>
+                            <input type="number" class="form-control" id="edit-socialInfluence" name="psychographic.social_influence" min="1" max="10" value="${consumer.psychographic.social_influence || ''}">
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 顯示編輯模態框
+            const modal = new bootstrap.Modal(document.getElementById('editConsumerModal'));
+            modal.show();
+            
+            // 綁定保存按鈕事件
+            document.getElementById('saveConsumerButton').onclick = function() {
+                saveConsumer();
+            };
+            
+            // 綁定刪除按鈕事件
+            document.getElementById('deleteConsumerButton').onclick = function() {
+                deleteConsumer(consumer.id);
+            };
+        }
+        
+        // 保存消費者
+        async function saveConsumer() {
+            try {
+                const consumerId = document.getElementById('editConsumerId').value;
+                
+                // 收集表單數據
+                const demographic = {};
+                const behavioral = {};
+                const psychographic = {};
+                
+                // 人口統計
+                demographic.age = document.getElementById('edit-age').value ? parseInt(document.getElementById('edit-age').value) : null;
+                demographic.gender = document.getElementById('edit-gender').value;
+                demographic.income = document.getElementById('edit-income').value ? parseInt(document.getElementById('edit-income').value) : null;
+                demographic.education = document.getElementById('edit-education').value;
+                demographic.occupation = document.getElementById('edit-occupation').value;
+                demographic.location = document.getElementById('edit-location').value;
+                
+                // 行為資料
+                behavioral.purchase_frequency = document.getElementById('edit-purchaseFrequency').value ? parseFloat(document.getElementById('edit-purchaseFrequency').value) : null;
+                behavioral.brand_loyalty = document.getElementById('edit-brandLoyalty').value ? parseInt(document.getElementById('edit-brandLoyalty').value) : null;
+                behavioral.price_consciousness = document.getElementById('edit-priceConsciousness').value ? parseInt(document.getElementById('edit-priceConsciousness').value) : null;
+                behavioral.tech_savviness = document.getElementById('edit-techSavviness').value ? parseInt(document.getElementById('edit-techSavviness').value) : null;
+                behavioral.social_media_usage = document.getElementById('edit-socialMediaUsage').value ? parseInt(document.getElementById('edit-socialMediaUsage').value) : null;
+                behavioral.preferred_channel = document.getElementById('edit-preferredChannel').value;
+                
+                // 心理統計
+                psychographic.personality = document.getElementById('edit-personality').value;
+                psychographic.values = document.getElementById('edit-values').value;
+                psychographic.interests = document.getElementById('edit-interests').value;
+                psychographic.lifestyles = document.getElementById('edit-lifestyles').value;
+                psychographic.innovativeness = document.getElementById('edit-innovativeness').value ? parseInt(document.getElementById('edit-innovativeness').value) : null;
+                psychographic.social_influence = document.getElementById('edit-socialInfluence').value ? parseInt(document.getElementById('edit-socialInfluence').value) : null;
+                
+                const data = {
+                    demographic,
+                    behavioral,
+                    psychographic
+                };
+                
+                // 發送更新請求
+                const result = await apiRequest(`/api/consumers/${consumerId}`, 'PUT', data);
+                
+                if (result.success) {
+                    // 隱藏模態框
+                    bootstrap.Modal.getInstance(document.getElementById('editConsumerModal')).hide();
+                    
+                    // 顯示成功消息
+                    showAlert('success', '消費者資料已更新');
+                    
+                    // 重新載入消費者列表
+                    loadConsumerList();
+                } else {
+                    throw new Error('更新消費者資料失敗');
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 刪除消費者
+        async function deleteConsumer(consumerId) {
+            try {
+                if (!confirm('確定要刪除這個消費者嗎？此操作不可撤銷。')) {
+                    return;
+                }
+                
+                const result = await apiRequest(`/api/consumers/${consumerId}`, 'DELETE');
+                
+                if (result.success) {
+                    // 隱藏模態框
+                    bootstrap.Modal.getInstance(document.getElementById('editConsumerModal')).hide();
+                    
+                    // 顯示成功消息
+                    showAlert('success', '消費者已刪除');
+                    
+                    // 重新載入消費者列表
+                    loadConsumerList();
+                } else {
+                    throw new Error('刪除消費者失敗');
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 提交消費者表單
+        async function submitConsumerForm() {
+            try {
+                // 收集表單數據
+                const demographic = {};
+                const behavioral = {};
+                const psychographic = {};
+                
+                // 人口統計
+                demographic.age = document.getElementById('age').value ? parseInt(document.getElementById('age').value) : null;
+                demographic.gender = document.getElementById('gender').value;
+                demographic.income = document.getElementById('income').value ? parseInt(document.getElementById('income').value) : null;
+                demographic.education = document.getElementById('education').value;
+                demographic.occupation = document.getElementById('occupation').value;
+                demographic.location = document.getElementById('location').value;
+                
+                // 行為資料
+                behavioral.purchase_frequency = document.getElementById('purchaseFrequency').value ? parseFloat(document.getElementById('purchaseFrequency').value) : null;
+                behavioral.brand_loyalty = document.getElementById('brandLoyalty').value ? parseInt(document.getElementById('brandLoyalty').value) : null;
+                behavioral.price_consciousness = document.getElementById('priceConsciousness').value ? parseInt(document.getElementById('priceConsciousness').value) : null;
+                behavioral.tech_savviness = document.getElementById('techSavviness').value ? parseInt(document.getElementById('techSavviness').value) : null;
+                behavioral.social_media_usage = document.getElementById('socialMediaUsage').value ? parseInt(document.getElementById('socialMediaUsage').value) : null;
+                behavioral.preferred_channel = document.getElementById('preferredChannel').value;
+                
+                // 心理統計
+                psychographic.personality = document.getElementById('personality').value;
+                psychographic.values = document.getElementById('values').value;
+                psychographic.interests = document.getElementById('interests').value;
+                psychographic.lifestyles = document.getElementById('lifestyles').value;
+                psychographic.innovativeness = document.getElementById('innovativeness').value ? parseInt(document.getElementById('innovativeness').value) : null;
+                psychographic.social_influence = document.getElementById('socialInfluence').value ? parseInt(document.getElementById('socialInfluence').value) : null;
+                
+                const data = {
+                    demographic,
+                    behavioral,
+                    psychographic
+                };
+                
+                // 發送請求
+                const result = await apiRequest('/api/consumers', 'POST', data);
+                
+                if (result.success) {
+                    // 重置表單
+                    document.getElementById('consumerForm').reset();
+                    
+                    // 顯示成功消息
+                    showAlert('success', '消費者資料已添加');
+                    
+                    // 重新載入消費者列表
+                    loadConsumerList();
+                } else {
+                    throw new Error('添加消費者資料失敗');
+                }
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 批量導入消費者
+        async function importConsumers(file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                // 顯示加載中
+                showAlert('info', '正在導入資料，請稍候...');
+                
+                // 讀取文件內容
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
+                        let consumers = [];
+                        
+                        // 根據文件類型解析資料
+                        if (file.name.endsWith('.json')) {
+                            consumers = JSON.parse(e.target.result);
+                        } else if (file.name.endsWith('.csv')) {
+                            // 簡單的CSV解析
+                            const lines = e.target.result.split('\n');
+                            const headers = lines[0].split(',');
+                            
+                            for (let i = 1; i < lines.length; i++) {
+                                if (!lines[i].trim()) continue;
+                                
+                                const values = lines[i].split(',');
+                                const consumer = {
+                                    demographic: {},
+                                    behavioral: {},
+                                    psychographic: {}
+                                };
+                                
+                                for (let j = 0; j < headers.length; j++) {
+                                    const header = headers[j].trim();
+                                    const value = values[j].trim();
+                                    
+                                    if (header.startsWith('demographic.')) {
+                                        const field = header.replace('demographic.', '');
+                                        consumer.demographic[field] = value;
+                                    } else if (header.startsWith('behavioral.')) {
+                                        const field = header.replace('behavioral.', '');
+                                        consumer.behavioral[field] = value;
+                                    } else if (header.startsWith('psychographic.')) {
+                                        const field = header.replace('psychographic.', '');
+                                        consumer.psychographic[field] = value;
+                                    }
+                                }
+                                
+                                consumers.push(consumer);
+                            }
+                        } else {
+                            throw new Error('不支持的文件格式');
+                        }
+                        
+                        // 逐個添加消費者
+                        let successCount = 0;
+                        let failCount = 0;
+                        
+                        for (const consumer of consumers) {
+                            try {
+                                const result = await apiRequest('/api/consumers', 'POST', consumer);
+                                if (result.success) {
+                                    successCount++;
+                                } else {
+                                    failCount++;
+                                }
+                            } catch (error) {
+                                failCount++;
+                                console.error('導入消費者失敗:', error);
+                            }
+                        }
+                        
+                        // 顯示結果
+                        showAlert('success', `導入完成: ${successCount} 成功, ${failCount} 失敗`);
+                        
+                        // 重新載入消費者列表
+                        loadConsumerList();
+                    } catch (error) {
+                        handleApiError(error);
+                    }
+                };
+                
+                reader.readAsText(file);
+            } catch (error) {
+                handleApiError(error);
+            }
+        }
+        
+        // 初始化頁面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 綁定搜索按鈕事件
+            document.getElementById('searchButton').addEventListener('click', function() {
+                const searchTerm = document.getElementById('searchInput').value.trim();
+                searchConsumers(searchTerm);
+            });
+            
+            // 綁定搜索輸入框回車事件
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = document.getElementById('searchInput').value.trim();
+                    searchConsumers(searchTerm);
+                }
+            });
+        });
+        
+        // 搜索消費者
+        function searchConsumers(searchTerm) {
+            // 這裡實現前端搜索，實際應用中可以改為後端搜索
+            const tableBody = document.getElementById('consumerTableBody');
+            const rows = tableBody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const cells = row.getElementsByTagName('td');
+                let found = false;
+                
+                for (let j = 0; j < cells.length; j++) {
+                    const cell = cells[j];
+                    if (cell.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (found) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

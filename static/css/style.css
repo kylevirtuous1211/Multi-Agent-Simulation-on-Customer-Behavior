@@ -1,0 +1,193 @@
+/* 全局樣式 */
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.jumbotron {
+    background-color: #f1f8ff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* 表單樣式 */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* 數據視覺化容器 */
+.visualization-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* 結果卡片 */
+.result-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+/* 標籤樣式 */
+.badge-primary {
+    background-color: #0d6efd;
+}
+
+.badge-success {
+    background-color: #198754;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+}
+
+/* 加載動畫 */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* 頁腳樣式 */
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .jumbotron {
+        padding: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
+/* 自定義顏色 */
+.bg-light-blue {
+    background-color: #e6f2ff;
+}
+
+.text-primary {
+    color: #0d6efd !important;
+}
+
+/* 代理卡片樣式 */
+.agent-card {
+    border-left: 5px solid #0d6efd;
+}
+
+/* 產品評估結果樣式 */
+.evaluation-positive {
+    border-left: 5px solid #198754;
+}
+
+.evaluation-neutral {
+    border-left: 5px solid #ffc107;
+}
+
+.evaluation-negative {
+    border-left: 5px solid #dc3545;
+}
+
+/* 圖表容器 */
+.chart-container {
+    height: 300px;
+    margin-bottom: 30px;
+}
+
+/* 提示信息樣式 */
+.alert {
+    border-radius: 10px;
+}
+
+/* 表格樣式 */
+.table {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+    background-color: #f1f8ff;
+}
+
+/* 標籤頁樣式 */
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    padding: 10px 15px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0d6efd;
+    background-color: transparent;
+    border-bottom: 3px solid #0d6efd;
+}
+
+/* 進度條樣式 */
+.progress {
+    height: 10px;
+    border-radius: 5px;
+}
+
+/* 模態框樣式 */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}

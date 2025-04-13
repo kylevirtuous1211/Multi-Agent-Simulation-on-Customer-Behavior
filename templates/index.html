@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消費者行為模擬系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">消費者行為模擬系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/consumers">消費者資料</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/classification">分類系統</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/agents">AI代理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product_test">產品測試</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crm">CRM整合</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="card-title">歡迎使用消費者行為模擬系統</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h2>系統概述</h2>
+                                <p>消費者行為模擬系統是一個基於AI代理的平台，能夠模擬消費者對新產品的反應。系統使用生成式代理架構，基於「Generative Agents: Interactive Simulacra of Human Behavior」論文實現，能夠模擬真實的人類行為和決策過程。</p>
+                                
+                                <h3>主要功能</h3>
+                                <ul>
+                                    <li>消費者資料管理：輸入、存儲和管理消費者資料</li>
+                                    <li>消費者分類：使用多種聚類算法對消費者進行分類</li>
+                                    <li>AI代理訓練：基於消費者資料訓練生成式AI代理</li>
+                                    <li>產品測試：使用文本和圖像輸入測試新產品，分析代理反應</li>
+                                    <li>CRM系統整合：與企業CRM系統進行API連接和資料同步</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h2>系統統計</h2>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light mb-3">
+                                            <div class="card-body text-center">
+                                                <h3 class="card-title">消費者數量</h3>
+                                                <p class="card-text display-4">{{ stats.consumer_count }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light mb-3">
+                                            <div class="card-body text-center">
+                                                <h3 class="card-title">代理數量</h3>
+                                                <p class="card-text display-4">{{ stats.agent_count }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h3>快速入門</h3>
+                                <div class="list-group">
+                                    <a href="/consumers/add" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">添加消費者資料</h5>
+                                            <small>&rarr;</small>
+                                        </div>
+                                        <p class="mb-1">輸入消費者的人口統計、行為和心理統計資料</p>
+                                    </a>
+                                    <a href="/classification" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">分類消費者</h5>
+                                            <small>&rarr;</small>
+                                        </div>
+                                        <p class="mb-1">使用聚類算法對消費者進行分類</p>
+                                    </a>
+                                    <a href="/agents/create" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">創建AI代理</h5>
+                                            <small>&rarr;</small>
+                                        </div>
+                                        <p class="mb-1">基於消費者資料創建生成式AI代理</p>
+                                    </a>
+                                    <a href="/product_test" class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">測試產品</h5>
+                                            <small>&rarr;</small>
+                                        </div>
+                                        <p class="mb-1">輸入產品信息，觀察代理反應</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white mt-5 py-3">
+        <div class="container text-center">
+            <p>&copy; 2025 消費者行為模擬系統 | 基於生成式代理架構</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
