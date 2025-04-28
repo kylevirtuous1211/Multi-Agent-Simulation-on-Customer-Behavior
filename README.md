@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Multi-Agent-Simulation-on-Customer-Behavior
 =======
 # 消費者行為模擬系統
