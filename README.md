@@ -23,7 +23,7 @@
       └── ... # Other project files
 
 ## 目前進度
-因為修了GenAI的課，有做了一個小prototype把他
+因為修了GenAI的課，有做了一個小prototype把他放在 `models/AI_Agent_CoT.ipynb`
 
 ## 系統概述
 
