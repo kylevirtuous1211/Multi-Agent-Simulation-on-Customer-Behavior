@@ -7,18 +7,31 @@
 
 ## Code structure
 ├── app.py # Main Flask application file 
+
 ├── models/ # Directory containing data models 
+
 │ ├── AI_Agent_CoT.ipynb # **目前的prototype**
+
 │ └── ... # 以後有一些clustering演算法可以放這裡
+
 ├── utils/ # Utility functions 之後如果有的話
+
 ├── data/ # Data storage directory 網站記錄用戶資料的地方 (訓練資料在`training data`)
+
 │ ├── consumer_database.db # SQLite database for consumer data 
+
 │ ├── agents/ # Directory for storing agent-specific data │ └── ... # Other data files 
+
 ├── training_data/ # 訓練用到的data放在這邊
+
 │ ├── Load_data_from_kaggle.py # Script to download dataset from Kaggle 
+
 │ └── ... # Other training-related files 
+
 ├── requirements.txt # List of Python dependencies 
+
 ├── README.md # Project documentation (this file) 
+
 └── ... # Other project files
 
 ## 目前進度
