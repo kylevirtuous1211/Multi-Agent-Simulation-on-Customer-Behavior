@@ -4,6 +4,16 @@
 
 基於生成式代理架構的消費者行為模擬系統，用於預測消費者對新產品的反應。
 
+# 競品
+1. Appier
+2. 意藍 
+
+## 可以做的點
+1. 列出每一個feature的priority
+2. 正負評 (Kyle)
+3. 尋找customer的痛點
+4. RAG (FAISS) : dataset不知
+   
 ## Code structure
       ├── app.py # Main Flask application file 
       ├── models/ # Directory containing data models 
